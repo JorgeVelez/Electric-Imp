@@ -1,9 +1,7 @@
 //AGENT///////////////
 //////////////////////
 
-// Log the URLs we need
-server.log("Turn LED On: " + http.agenturl() + "?led=1");
-server.log("Turn LED Off: " + http.agenturl() + "?led=0");
+server.log("Hall sensor log");
  
 function requestHandler(request, response) {
   try {
@@ -20,7 +18,7 @@ function requestHandler(request, response) {
       //}
     }
     // send a response back saying everything was OK.
-    response.send(200, "OK3");
+    response.send(200, "OK");
   } catch (ex) {
     response.send(500, "Internal Server Error: " + ex);
   }
@@ -34,6 +32,11 @@ function buttonStateHandler(buttonStateHandlerArg) {
 device.on("medicion", buttonStateHandler);
  
 http.onrequest(requestHandler);
+
+
+
+
+
 
 //DEVICE///////////////
 //////////////////////
