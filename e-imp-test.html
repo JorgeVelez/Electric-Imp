@@ -1,52 +1,36 @@
-<html>
-<head>
-<script type="text/javascript">
+server.log("Hall sensor log");
  
-function moveTo(pos,form){
-  var urlImp = "https://agent.electricimp.com/";
-        var uid = form.uid.value;
-var url = "proxy.php?address="+urlImp+uid+"/?move=pos";
+function requestHandler(request, response) {
+  try {
+     if ("move" in request.query) {
+      
+      // if they did, and led=1.. set our variable to 1
+      //if (request.query.led == "1" || request.query.led == "0") {
+        // convert the led query parameter to an integer
+        local ledState = request.query.move.tofloat();
         
-       if (window.XMLHttpRequest){
-  httpRequest=new XMLHttpRequest();
-  }else{
-  httpRequest=new ActiveXObject("Microsoft.XMLHTTP");
+        response.send(200, "received "+request.query.move.tofloat());
+        
+        // send "led" message to device, and send ledState as the data
+        device.send("led", ledState); 
+      //}
+    }else{
+         response.send(200, "send move var");
+    }
+    
+    
+    // send a response back saying everything was OK.
+    
+  } catch (ex) {
+    response.send(500, "Internal Server Error: " + ex);
   }
-                // Call the open() method to make the request
-                httpRequest.open("GET", url , true);
- 
-                // Send the request
-                httpRequest.send();
-                httpRequest.onreadystatechange = getData; // Assign the callback function
-
-//xmlhttp.open("POST","ajax_test.asp",true);
-//xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-//xmlhttp.send("fname=Henry&lname=Ford");
-
 }
- 
-function getData(){
-        document.getElementById("hello_area").innerHTML=httpRequest.responseText;
-}
-</script>
- 
-</head>
- 
-<body>
- 
-<form name="http servo" action="#" method="post">
-UID of electric impee: <input type="text" name="uid" value="1ZHINamlhHQh"><br>
- 
-<input type="button" value="A" onclick="moveTo(0.0, this.form)" />
-<input type="button" value="B" onclick="moveTo(0.25, this.form)" />
-<input type="button" value="C" onclick="moveTo(0.5, this.form)" />
-<input type="button" value="D" onclick="moveTo(0.75, this.form)" />
-<input type="button" value="E" onclick="moveTo(1.0, this.form)" />
-<br>
-</form>
- 
-<div id="hello_area">...</div>
 
-</body>
+function buttonStateHandler(buttonStateHandlerArg) {
+  server.log("buttonStateHandlerArg log: " + buttonStateHandlerArg);
+  
+}
+
+device.on("medicion", buttonStateHandler);
  
-</html>
+http.onrequest(requestHandler);
