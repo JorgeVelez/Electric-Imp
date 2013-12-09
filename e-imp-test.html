@@ -2,42 +2,31 @@
 <head>
 <script type="text/javascript">
  
-function moveTo(pos,form)
-{
-  var url = "https://api.electricimp.com/v1/.../..."
-	var uid = form.uid.value;
+function moveTo(pos,form){
+  var urlImp = "https://agent.electricimp.com/";
+        var uid = form.uid.value;
+var url = "proxy.php?address="+urlImp+uid+"/?move=pos";
+        
+       if (window.XMLHttpRequest){
+  httpRequest=new XMLHttpRequest();
+  }else{
+  httpRequest=new ActiveXObject("Microsoft.XMLHTTP");
+  }
+                // Call the open() method to make the request
+                httpRequest.open("GET", url , true);
  
-	var value = "{ \"pos\": " + pos + 
-                    ", \"uid\": \"" + uid + "\" " +
-                    " }"
-	
-	//check support for the XMLHttpRequest object
-	if (window.XMLHttpRequest)
-	{
-		var httpRequest = new XMLHttpRequest();
- 
-		// Call the open() method to make the request
-		httpRequest.open("POST", url, true);
- 
-		// Send the proper header information along with the request
-		httpRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-		httpRequest.setRequestHeader("Connection", "close");
- 
-		// Send the request
-		httpRequest.send('value='+value);
-		httpRequest.onreadystatechange = getData; // Assign the callback function
-	}
-	//else, alert
-	else
-	{
-		alert("Screw IE6...")
-	}
+                // Send the request
+                httpRequest.send();
+                httpRequest.onreadystatechange = getData; // Assign the callback function
+
+//xmlhttp.open("POST","ajax_test.asp",true);
+//xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+//xmlhttp.send("fname=Henry&lname=Ford");
+
 }
  
-//This function handles the server response and does nothing at all with it.
-function getData()
-{
-	// Do nothing.
+function getData(){
+        document.getElementById("hello_area").innerHTML=httpRequest.responseText;
 }
 </script>
  
@@ -46,7 +35,7 @@ function getData()
 <body>
  
 <form name="http servo" action="#" method="post">
-UID of electric impee: <input type="text" name="uid" value="your impee's uid goes here"><br>
+UID of electric impee: <input type="text" name="uid" value="1ZHINamlhHQh"><br>
  
 <input type="button" value="A" onclick="moveTo(0.0, this.form)" />
 <input type="button" value="B" onclick="moveTo(0.25, this.form)" />
@@ -56,6 +45,8 @@ UID of electric impee: <input type="text" name="uid" value="your impee's uid goe
 <br>
 </form>
  
+<div id="hello_area">...</div>
+
 </body>
  
 </html>
